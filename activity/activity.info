@@ -1,0 +1,6 @@
+[Activity]
+name = Math Hurdler
+bundle_id = edu.rit.math-hurdler
+exec = sugar-activity math-hurdlerActivity.math-hurdlerActivity
+icon = activity-generic
+activity_version = 1
