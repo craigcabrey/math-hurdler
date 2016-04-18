@@ -3,7 +3,7 @@ import pygame
 from gi.repository import Gtk
 
 
-class math-hurdler:
+class MathHurdler:
     def __init__(self):
         # Set up a clock for managing the frame rate.
         self.clock = pygame.time.Clock()
@@ -84,7 +84,7 @@ class math-hurdler:
 def main():
     pygame.init()
     pygame.display.set_mode((0, 0), pygame.RESIZABLE)
-    game = math-hurdler()
+    game = MathHurdler()
     game.run()
 
 if __name__ == '__main__':

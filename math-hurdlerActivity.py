@@ -16,14 +16,14 @@ import sugargame.canvas
 import math-hurdler
 
 
-class math-hurdlerActivity(sugar3.activity.activity.Activity):
+class MathHurdlerActivity(sugar3.activity.activity.Activity):
     def __init__(self, handle):
-        super(math-hurdlerActivity, self).__init__(handle)
+        super(MathHurdlerActivity, self).__init__(handle)
 
         self.paused = False
 
         # Create the game instance.
-        self.game = math-hurdler.math-hurdler()
+        self.game = math-hurdler.MathHurdler()
 
         # Build the activity toolbar.
         self.build_toolbar()
