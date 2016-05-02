@@ -51,6 +51,9 @@ class MathHurdler:
         horse = pygame.image.load('./assets/images/color_unicorn.png')
         horse = pygame.transform.scale(horse,(640/3,472/3))
 
+        hurdle = pygame.image.load('./assets/images/hurdle.png')
+        hurdle = pygame.transform.scale(hurdle,(hurdle.get_height()/3,hurdle.get_width()/3))
+
         display_info = pygame.display.Info();
 
         while self.running:
@@ -88,7 +91,8 @@ class MathHurdler:
 
             screen.blit(background, (0,0))
             screen.blit(ground, (0,screen_size[1]-ground.get_height()))
-            screen.blit(horse,(self.x,(display_info.current_h - horse.get_height()-ground.get_height())))
+            screen.blit(horse,(100,(display_info.current_h - horse.get_height()-ground.get_height())))
+            screen.blit(hurdle,(self.x,(display_info.current_h - hurdle.get_height()-ground.get_height())))
 
             # Flip Display
             pygame.display.flip()
