@@ -1,8 +1,13 @@
-#!/usr/bin/python
+#!/usr/bin/env python2
+
+import gi
+
+gi.require_version('Gtk', '3.0')
+
+import gi.repository.Gtk
 import pygame
 import random
 import os
-from gi.repository import Gtk
 
 
 class MathHurdler:
@@ -89,8 +94,8 @@ class MathHurdler:
         question = self.lg_font.render("3/4 + 1/4 = ?", 1, (0,0,0))
 
         while self.running:
-            while Gtk.events_pending():
-                Gtk.main_iteration()
+            while gi.repository.Gtk.events_pending():
+                gi.repository.Gtk.main_iteration()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -100,6 +105,8 @@ class MathHurdler:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
                         self.direction = 1
+                    elif event.key == pygame.K_p:
+                        self.paused = not self.paused
 
             screen_size = screen.get_size()
 
