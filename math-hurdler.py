@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import pygame
 import random
+import os
 from gi.repository import Gtk
 
 
@@ -31,25 +32,29 @@ class MathHurdler:
     def read_file(self, file_path):
         pass
 
+    def get_asset_path(self, asset_name):
+        return os.path.join('./assets/images', asset_name)
+
     # The main game loop.
     def run(self):
         self.running = True
 
+        background_color = (126, 192, 238)
+
         screen = pygame.display.get_surface()
         screen_size = screen.get_size()
 
-        background = pygame.Surface(screen_size)
-        background = background.convert()
-        background.fill((126,192,238))
-
-        ground = pygame.Surface( (screen_size[0], screen_size[1]/5) )
+        ground = pygame.Surface((screen_size[0], screen_size[1] / 5))
         ground = ground.convert()
-        ground.fill((127,96,0))
+        ground.fill((127, 96, 0))
 
-        grass = pygame.draw.line(ground,(0,255,0),(0,0), (ground.get_width(),0), 15)
+        grass = pygame.draw.line(ground,(0, 255, 0), (0, 0), (ground.get_width(), 0), 15)
 
-        horse = pygame.image.load('./assets/images/color_unicorn.png')
-        horse = pygame.transform.scale(horse,(640/3,472/3))
+        sun = pygame.image.load(self.get_asset_path('sun.png'))
+        sun = pygame.transform.scale(sun, (sun.get_width() / 2, sun.get_height() / 2))
+
+        horse = pygame.image.load(self.get_asset_path('color_unicorn.png'))
+        horse = pygame.transform.scale(horse,(horse.get_width() / 3, horse.get_height() / 3))
 
         hurdle = pygame.image.load('./assets/images/hurdle.png')
         hurdle = pygame.transform.scale(hurdle,(hurdle.get_height()/3,hurdle.get_width()/3))
@@ -57,11 +62,9 @@ class MathHurdler:
         display_info = pygame.display.Info();
 
         while self.running:
-            # Pump GTK messages.
             while Gtk.events_pending():
                 Gtk.main_iteration()
 
-            # Pump PyGame messages.
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
@@ -71,7 +74,8 @@ class MathHurdler:
                     if event.key == pygame.K_RIGHT:
                         self.direction = 1
 
-            # Move the ball
+            screen_size = screen.get_size()
+
             if not self.paused:
                 self.x += self.vx * self.direction
                 if self.direction == 1 and self.x > screen.get_width() + 50:
@@ -86,15 +90,15 @@ class MathHurdler:
 
                 self.vy += 5
 
-            # Clear Display
-            screen.fill((255, 255, 255))  # 255 for white
+            # Set the "sky" color to blue
+            screen.fill(background_color)
 
-            screen.blit(background, (0,0))
-            screen.blit(ground, (0,screen_size[1]-ground.get_height()))
-            screen.blit(horse,(100,(display_info.current_h - horse.get_height()-ground.get_height())))
+            screen.blit(sun, (screen_size[1] + sun.get_width(), 0))
+            screen.blit(ground, (0, screen_size[1] - ground.get_height()))
+            screen.blit(horse, (self.x, (display_info.current_h - horse.get_height() - ground.get_height())))
             screen.blit(hurdle,(self.x,(display_info.current_h - hurdle.get_height()-ground.get_height())))
 
-            # Flip Display
+            # Draw the frame
             pygame.display.flip()
 
             # Try to stay at 30 FPS
