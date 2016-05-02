@@ -64,6 +64,37 @@ class MathHurdler:
         ground = ground.convert()
         ground.fill((127, 96, 0))
 
+        button_panel = pygame.Surface((screen_size[0]/3, screen_size[1] / 7))
+
+        button_a = pygame.Surface((button_panel.get_width()/2,button_panel.get_height()/2))
+        button_a = button_a.convert()
+        button_a.fill((0,0,0))
+        button_a.fill((255,255,255),button_a.get_rect().inflate(-2,-2))
+
+        button_a_label = self.lg_font.render('3/4',1,(0,0,0))
+
+        button_b = pygame.Surface((button_panel.get_width()/2,button_panel.get_height()/2))
+        button_b = button_b.convert()
+        button_b.fill((0,0,0))
+        button_b.fill((255,255,255),button_b.get_rect().inflate(-2,-2))
+
+        button_b_label = self.lg_font.render('0',1,(0,0,0))
+
+        button_c = pygame.Surface((button_panel.get_width()/2,button_panel.get_height()/2))
+        button_c = button_c.convert()
+        button_c.fill((0,0,0))
+        button_c.fill((255,255,255),button_c.get_rect().inflate(-2,-2))
+
+        button_c_label = self.lg_font.render('1',1,(0,0,0))
+
+        button_d = pygame.Surface((button_panel.get_width()/2,button_panel.get_height()/2))
+        button_d = button_d.convert()
+        button_d.fill((0,0,0))
+        button_d.fill((255,255,255),button_d.get_rect().inflate(-2,-2))
+
+        button_d_label = self.lg_font.render('1/4',1,(0,0,0))
+
+
         grass = pygame.draw.line(ground,(0, 255, 0), (0, 0), (ground.get_width(), 0), ground.get_height()/2)
 
         sun = pygame.image.load(self.get_asset_path('sun.png'))
@@ -159,6 +190,20 @@ class MathHurdler:
             screen.blit(points_label, (sun_x+sun.get_width()/4, sun_y+sun.get_height()/3+score_label.get_height()))
 
             screen.blit(ground, (0, screen_size[1] - ground.get_height()))
+            ground.blit(button_panel, (ground.get_width()/4,ground.get_height()/3+10))
+
+            button_panel.blit(button_a,(0,0))
+            button_a.blit(button_a_label,(button_a.get_width()/3,button_a.get_height()/10))
+
+            button_panel.blit(button_b,(button_panel.get_width()/2,0))
+            button_b.blit(button_b_label,(button_b.get_width()/3,button_b.get_height()/10))
+
+            button_panel.blit(button_c,(0,button_panel.get_height()/2))
+            button_c.blit(button_c_label,(button_c.get_width()/3,button_c.get_height()/10))
+
+            button_panel.blit(button_d,(button_panel.get_width()/2,button_panel.get_height()/2))
+            button_d.blit(button_d_label,(button_d.get_width()/3,button_d.get_height()/10))
+
             screen.blit(active_horse, (horse_x, self.y))
             screen.blit(hurdle,(self.x,hurdle_y))
 
