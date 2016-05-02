@@ -1,5 +1,6 @@
 #!/usr/bin/python
 import pygame
+import random
 from gi.repository import Gtk
 
 
@@ -17,6 +18,8 @@ class MathHurdler:
         self.paused = False
         self.direction = 1
 
+        self.circle_size = 150
+
     def set_paused(self, paused):
         self.paused = paused
 
@@ -33,6 +36,22 @@ class MathHurdler:
         self.running = True
 
         screen = pygame.display.get_surface()
+        screen_size = screen.get_size()
+
+        background = pygame.Surface(screen_size)
+        background = background.convert()
+        background.fill((126,192,238))
+
+        ground = pygame.Surface( (screen_size[0], screen_size[1]/5) )
+        ground = ground.convert()
+        ground.fill((127,96,0))
+
+        grass = pygame.draw.line(ground,(0,255,0),(0,0), (ground.get_width(),0), 15)
+
+        horse = pygame.image.load('./assets/images/color_unicorn.png')
+        horse = pygame.transform.scale(horse,(640/3,472/3))
+
+        display_info = pygame.display.Info();
 
         while self.running:
             # Pump GTK messages.
@@ -46,22 +65,20 @@ class MathHurdler:
                 elif event.type == pygame.VIDEORESIZE:
                     pygame.display.set_mode(event.size, pygame.RESIZABLE)
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_LEFT:
-                        self.direction = -1
-                    elif event.key == pygame.K_RIGHT:
+                    if event.key == pygame.K_RIGHT:
                         self.direction = 1
 
             # Move the ball
             if not self.paused:
                 self.x += self.vx * self.direction
-                if self.direction == 1 and self.x > screen.get_width() + 100:
-                    self.x = -100
-                elif self.direction == -1 and self.x < -100:
-                    self.x = screen.get_width() + 100
+                if self.direction == 1 and self.x > screen.get_width() + 50:
+                    self.x = -50
+                elif self.direction == -1 and self.x < -50:
+                    self.x = screen.get_width() + 50
 
                 self.y += self.vy
-                if self.y > screen.get_height() - 100:
-                    self.y = screen.get_height() - 100
+                if self.y > screen.get_height() - 50:
+                    self.y = screen.get_height() - 50
                     self.vy = -self.vy
 
                 self.vy += 5
@@ -69,8 +86,9 @@ class MathHurdler:
             # Clear Display
             screen.fill((255, 255, 255))  # 255 for white
 
-            # Draw the ball
-            pygame.draw.circle(screen, (255, 0, 0), (self.x, self.y), 100)
+            screen.blit(background, (0,0))
+            screen.blit(ground, (0,screen_size[1]-ground.get_height()))
+            screen.blit(horse,(self.x,(display_info.current_h - horse.get_height()-ground.get_height())))
 
             # Flip Display
             pygame.display.flip()
