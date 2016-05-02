@@ -84,6 +84,8 @@ class MathHurdler:
                 elif event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RIGHT:
                         self.direction = 1
+                    elif event.key == pygame.K_p:
+                        self.paused = not self.paused
 
             screen_size = screen.get_size()
 
