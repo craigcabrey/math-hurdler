@@ -1,9 +1,13 @@
 #!/usr/bin/env python2
 
+import gi
+
+gi.require_version('Gtk', '3.0')
+
+import gi.repository.Gtk
 import pygame
 import random
 import os
-from gi.repository import Gtk
 
 
 class MathHurdler:
@@ -73,8 +77,8 @@ class MathHurdler:
         hurdle_y = display_info.current_h - hurdle.get_height() - (ground.get_height() / 2)
 
         while self.running:
-            while Gtk.events_pending():
-                Gtk.main_iteration()
+            while gi.repository.Gtk.events_pending():
+                gi.repository.Gtk.main_iteration()
 
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
