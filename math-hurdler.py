@@ -8,7 +8,7 @@ import gi.repository.Gtk
 import pygame
 import random
 import os
-
+from sprites.sun import Sun
 
 class MathHurdler:
     def __init__(self):
@@ -94,11 +94,7 @@ class MathHurdler:
 
         button_d_label = self.lg_font.render('1/4',1,(0,0,0))
 
-
         grass = pygame.draw.line(ground,(0, 255, 0), (0, 0), (ground.get_width(), 0), ground.get_height()/2)
-
-        sun = pygame.image.load(self.get_asset_path('sun.png'))
-        sun = pygame.transform.scale(sun, (sun.get_width() / 2, sun.get_height() / 2))
 
         score_label = self.lg_font.render(str(self.points),1,(0,0,0))
         points_label = self.lg_font.render('POINTS',1,(0,0,0))
@@ -179,15 +175,19 @@ class MathHurdler:
             # Set the "sky" color to blue
             screen.fill(background_color)
 
+            sun = Sun()
+            sun.rect.x = screen_size[1] + sun.image.get_width()
+            sun.rect.y = 0
+
+            allsprites = pygame.sprite.RenderPlain((sun))
+            allsprites.draw(screen)
+
             screen.blit(question_board, (screen_size[0] / 4, screen_size[1] / 5))
             question_board.blit(question_label, (10,10))
             question_board.blit(question, (10,question_label.get_height()+10))
 
-            sun_x = screen_size[1] + sun.get_width()
-            sun_y = 0
-            screen.blit(sun, (sun_x,sun_y))
-            screen.blit(score_label, (sun_x+sun.get_width()/4,sun_y+sun.get_height()/3))
-            screen.blit(points_label, (sun_x+sun.get_width()/4, sun_y+sun.get_height()/3+score_label.get_height()))
+            screen.blit(score_label, (sun.rect.x+sun.image.get_width()/4,sun.rect.y+sun.image.get_height()/3))
+            screen.blit(points_label, (sun.rect.x+sun.image.get_width()/4, sun.rect.y+sun.image.get_height()/3+score_label.get_height()))
 
             screen.blit(ground, (0, screen_size[1] - ground.get_height()))
             ground.blit(button_panel, (ground.get_width()/4,ground.get_height()/3+10))
