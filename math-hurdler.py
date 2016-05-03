@@ -105,6 +105,13 @@ class MathHurdler:
         question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
         question = self.lg_font.render("3/4 + 1/4 = ?", 1, (0,0,0))
 
+        def answer_problem():
+            button_a.set_text('jlk')
+            button_b.set_text('hol')
+            button_c.set_text('abc')
+            button_d.set_text('def')
+
+
         while self.running:
             while gi.repository.Gtk.events_pending():
                 gi.repository.Gtk.main_iteration()
@@ -119,6 +126,8 @@ class MathHurdler:
                         self.direction = 1
                     elif event.key == pygame.K_p:
                         self.paused = not self.paused
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    button_a.mouse_click(pygame.mouse.get_pos(),answer_problem)
 
             screen_size = screen.get_size()
 
@@ -203,8 +212,6 @@ class MathHurdler:
 
             # Try to stay at 30 FPS
             self.clock.tick(30)
-
-
 
 # This function is called when the game is run directly from the command line:
 # ./TestGame.py
