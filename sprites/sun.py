@@ -7,4 +7,3 @@ class Sun(pygame.sprite.Sprite):
         sun = pygame.image.load('./assets/images/sun.png').convert_alpha()
         self.image = pygame.transform.scale(sun, (sun.get_width() / 2, sun.get_height() / 2))
         self.rect = self.image.get_rect()
-        self.rect.topleft = 10, 10
