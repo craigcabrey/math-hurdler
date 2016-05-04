@@ -8,6 +8,13 @@ from sprites.sun import Sun
 from objects.button import Button
 from question import Question
 
+class Color:
+    BLACK = (0, 0, 0)
+    WHITE = (255, 255, 255)
+    SKYBLUE = (126, 192, 238)
+    BROWN = (127, 96, 0)
+    GREEN = (0, 255, 0)
+
 class MathHurdler:
     def __init__(self):
         # Set up a clock for managing the frame rate.
@@ -36,9 +43,23 @@ class MathHurdler:
 
         self.question = Question()
 
-        self.question_text_label = self.lg_font.render(str(self.question), 1, (0,0,0))
-        self.question_label = self.font.render('Hurdle #' + str(self.hurdle_number), 1, (0,0,0))
-        self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
+        self.question_text_label = self.lg_font.render(
+            str(self.question),
+            1,
+            Color.BLACK
+        )
+
+        self.question_label = self.font.render(
+            'Hurdle #' + str(self.hurdle_number),
+            1,
+            Color.BLACK
+        )
+
+        self.score_label = self.lg_font.render(
+            str(self.points),
+            1,
+            Color.BLACK
+        )
 
         self.buttons = []
 
@@ -52,14 +73,6 @@ class MathHurdler:
         self.playing = playing
         self.set_paused(False)
         self.set_gameover(False)
-
-    # Called to save the state of the game to the Journal.
-    def write_file(self, file_path):
-        pass
-
-    # Called to load the state of the game from the Journal.
-    def read_file(self, file_path):
-        pass
 
     def get_asset_path(self, asset_name):
         return os.path.join('./assets/images', asset_name)
@@ -76,34 +89,39 @@ class MathHurdler:
         self.score = 0
 
         display_info = pygame.display.Info()
-        background_color = (126, 192, 238)
+        background_color = Color.SKYBLUE
 
         screen = pygame.display.get_surface()
         screen_size = screen.get_size()
 
         ground = pygame.Surface((screen_size[0], screen_size[1] / 3))
         ground = ground.convert()
-        ground.fill((127, 96, 0))
+        ground.fill(Color.BROWN)
 
         button_panel = pygame.Surface((screen_size[0]/3, screen_size[1] / 7))
 
-        button_a = Button( str(self.question.answers[0]), self.lg_font,(0,0,0), button_panel.get_width()/2,
-                           button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
+        self.buttons = [
+            Button(
+                str(self.question.answers[i]),
+                self.lg_font,
+                Color.BLACK,
+                button_panel.get_width() / 2,
+                button_panel.get_height() / 2,
+                Color.WHITE,
+                Color.BLACK,
+                -2
+            ) for i in range(4)
+        ]
 
-        button_b = Button( str(self.question.answers[1]), self.lg_font,(0,0,0), button_panel.get_width()/2,
-                           button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
+        grass = pygame.draw.line(
+            ground,
+            Color.GREEN,
+            (0, 0),
+            (ground.get_width(), 0),
+            ground.get_height() / 2
+        )
 
-        button_c = Button( str(self.question.answers[2]), self.lg_font,(0,0,0), button_panel.get_width()/2,
-                           button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
-
-        button_d = Button( str(self.question.answers[3]), self.lg_font,(0,0,0), button_panel.get_width()/2,
-                           button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
-
-        self.buttons = [button_a,button_b,button_c,button_d]
-
-        grass = pygame.draw.line(ground,(0, 255, 0), (0, 0), (ground.get_width(), 0), ground.get_height()/2)
-
-        points_label = self.lg_font.render('POINTS',1,(0,0,0))
+        points_label = self.lg_font.render('POINTS', 1, Color.BLACK)
 
         horse = pygame.image.load(self.get_asset_path('color_unicorn.png'))
         horse = pygame.transform.scale(horse,(horse.get_width() / 3, horse.get_height() / 3))
@@ -122,12 +140,20 @@ class MathHurdler:
 
         question_board = pygame.Surface((screen_size[0]/3, screen_size[1] / 5))
         question_board = question_board.convert()
-        question_board.fill((255, 255, 255))
+        question_board.fill(Color.WHITE)
 
-        menu_button = Button( 'Play', self.lg_font,(0,0,0), 200,
-                           100, (255,255,255), (0,0,0), -2)
+        menu_button = Button(
+            'Play',
+            self.lg_font,
+            Color.BLACK,
+            200,
+            100,
+            Color.WHITE,
+            Color.BLACK,
+            -2
+        )
 
-        pause_label = self.lg_font.render('PAUSED',1,(0,0,0))
+        pause_label = self.lg_font.render('PAUSED',1, Color.BLACK)
 
         def reset():
             self.running = True
@@ -155,10 +181,12 @@ class MathHurdler:
 
         def generate_question():
             self.question = Question()
-            button_a.set_text(str(self.question.answers[0]))
-            button_b.set_text(str(self.question.answers[1]))
-            button_c.set_text(str(self.question.answers[2]))
-            button_d.set_text(str(self.question.answers[3]))
+
+            self.buttons[0].set_text(str(self.question.answers[0]))
+            self.buttons[1].set_text(str(self.question.answers[1]))
+            self.buttons[2].set_text(str(self.question.answers[2]))
+            self.buttons[3].set_text(str(self.question.answers[3]))
+
             self.question_text_label = self.lg_font.render(str(self.question), 1, (0,0,0))
             self.hurdle_number += 1
             self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
@@ -280,23 +308,23 @@ class MathHurdler:
                 screen.blit(ground, (0, screen_size[1] - ground.get_height()))
                 button_panel_x = ground.get_width()/4
                 button_panel_y = screen_size[1] - ground.get_height() + ground.get_height()/3+10
-                screen.blit(button_panel, (button_panel_x,button_panel_y))
+                screen.blit(button_panel, (button_panel_x, button_panel_y))
 
-                button_a.rect.x = button_panel_x
-                button_a.rect.y = button_panel_y
-                button_a.draw(screen)
+                self.buttons[0].rect.x = button_panel_x
+                self.buttons[0].rect.y = button_panel_y
+                self.buttons[0].draw(screen)
 
-                button_b.rect.x = button_panel_x + button_a.image.get_width()
-                button_b.rect.y = button_panel_y
-                button_b.draw(screen)
+                self.buttons[1].rect.x = button_panel_x + self.buttons[0].image.get_width()
+                self.buttons[1].rect.y = button_panel_y
+                self.buttons[1].draw(screen)
 
-                button_c.rect.x = button_panel_x
-                button_c.rect.y = button_panel_y + button_a.image.get_height()
-                button_c.draw(screen)
+                self.buttons[2].rect.x = button_panel_x
+                self.buttons[2].rect.y = button_panel_y + self.buttons[0].image.get_height()
+                self.buttons[2].draw(screen)
 
-                button_d.rect.x = button_panel_x + button_c.image.get_width()
-                button_d.rect.y = button_panel_y + button_b.image.get_height()
-                button_d.draw(screen)
+                self.buttons[3].rect.x = button_panel_x + self.buttons[2].image.get_width()
+                self.buttons[3].rect.y = button_panel_y + self.buttons[2].image.get_height()
+                self.buttons[3].draw(screen)
 
                 screen.blit(active_horse, (horse_x, self.y))
                 screen.blit(hurdle,(self.x,hurdle_y))
