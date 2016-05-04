@@ -29,14 +29,14 @@ class MathHurdler:
         self.circle_size = 150
 
         self.horse_change_semaphore = 3
-        self.horse_change = 0;
+        self.horse_change = 0
 
         self.font = pygame.font.SysFont("monospace", 36)
         self.lg_font = pygame.font.SysFont("monospace", 72)
 
         self.hurdle_number = 1
 
-        self.points = 0;
+        self.points = 0
 
         self.question = Question()
         question_string = str(self.question.left_question) + ' + ' +str(self.question.right_question) + '= ?'
@@ -62,7 +62,7 @@ class MathHurdler:
     def run(self):
         self.running = True
 
-        display_info = pygame.display.Info();
+        display_info = pygame.display.Info()
         background_color = (126, 192, 238)
 
         screen = pygame.display.get_surface()
@@ -95,9 +95,9 @@ class MathHurdler:
         horse_jump = pygame.transform.rotate(horse,45)
         horse_gallop = pygame.transform.rotate(horse, -15)
 
-        active_horse = horse_gallop;
+        active_horse = horse_gallop
 
-        horse_x = display_info.current_h/3;
+        horse_x = display_info.current_h/3
 
         hurdle = pygame.image.load('./assets/images/hurdle.png')
         hurdle = pygame.transform.scale(hurdle,(hurdle.get_height()/3,hurdle.get_width()/3))
@@ -149,12 +149,12 @@ class MathHurdler:
                     self.x = -50
                 elif self.direction == -1 and self.x < -50:
                     self.x = screen.get_width() + 50
-                self.y = display_info.current_h - horse.get_height() - ground.get_height();
+                self.y = display_info.current_h - horse.get_height() - ground.get_height()
 
                 hurdle_rect = hurdle.get_rect(topleft=(self.x,hurdle_y))
                 horse_rect = horse.get_rect(topleft=(horse_x,self.y))
 
-                if ( (active_horse == horse_jump) and (not hurdle_rect.colliderect(horse_rect)) ):
+                if (active_horse == horse_jump) and (not hurdle_rect.colliderect(horse_rect)):
                     active_horse = horse
 
                 if (self.horse_change == self.horse_change_semaphore):
