@@ -19,4 +19,4 @@ class Question:
                 self.answers.append(Fraction(random.randrange(1,10),random.randrange(1,10)))
 
     def is_answer(self,fraction):
-        return (fraction == self.answers(self.answer))
+        return (fraction == self.answers[self.answer])

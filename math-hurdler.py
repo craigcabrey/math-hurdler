@@ -11,6 +11,7 @@ import os
 from sprites.sun import Sun
 from objects.button import Button
 from question import Question
+from fractions import Fraction
 
 class MathHurdler:
     def __init__(self):
@@ -74,7 +75,7 @@ class MathHurdler:
         self.playing = False
         self.gameover = False
         self.paused = False
-        last_answer = -1
+        self.last_answer = -1
         question_dirty = True
 
         self.score = 0
@@ -138,7 +139,7 @@ class MathHurdler:
             self.playing = False
             self.gameover = False
             self.paused = False
-            last_answer = -1
+            self.last_answer = -1
             question_dirty = True
 
             self.score = 0
@@ -173,10 +174,10 @@ class MathHurdler:
             self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
         def set_answer(answer):
-            last_answer = answer
+            self.last_answer = Fraction(self.buttons[answer].text)
 
         def evaluate_answer(answer):
-            if self.question.answer == answer:
+            if self.question.is_answer(answer):
                 self.points += 100
                 self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
             else:
@@ -193,9 +194,7 @@ class MathHurdler:
                     elif event.type == pygame.VIDEORESIZE:
                         pygame.display.set_mode(event.size, pygame.RESIZABLE)
                     elif event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_RIGHT:
-                            self.direction = 1
-                        elif event.key == pygame.K_p:
+                        if event.key == pygame.K_p:
                             self.paused = not self.paused
                         elif event.key == pygame.K_r:
                             reset()
@@ -236,7 +235,7 @@ class MathHurdler:
                     if hurdle_rect.colliderect(horse_rect):
                         #evaluate answer on first frame of hurdle collision
                         if not question_dirty:
-                            evaluate_answer(last_answer)
+                            evaluate_answer(self.last_answer)
                             question_dirty = True
 
                         #if not gameover, jump the hurdle
@@ -248,7 +247,7 @@ class MathHurdler:
                     elif question_dirty:
                         generate_question()
                         question_dirty = False
-                        last_answer = -1
+                        self.last_answer = -1
 
                 if self.gameover:
                     #spin the horse
