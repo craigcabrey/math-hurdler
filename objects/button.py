@@ -23,6 +23,10 @@ class Button(object):
     def mouse_click(self, mouse, action):
         if self.rect.collidepoint(mouse):
             action()
+            
+    def mouse_click(self, mouse, action, arg):
+        if self.rect.collidepoint(mouse):
+            action(arg)
 
     def set_text(self, text):
         self.text = text
