@@ -36,12 +36,7 @@ class MathHurdler:
 
         self.question = Question()
 
-        question_string = '{} + {} = ?'.format(
-            self.question.left_question,
-            self.question.right_question
-        )
-
-        self.question_text_label = self.lg_font.render(question_string, 1, (0,0,0))
+        self.question_text_label = self.lg_font.render(str(self.question), 1, (0,0,0))
         self.question_label = self.font.render('Hurdle #' + str(self.hurdle_number), 1, (0,0,0))
         self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
@@ -164,8 +159,7 @@ class MathHurdler:
             button_b.set_text(str(self.question.answers[1]))
             button_c.set_text(str(self.question.answers[2]))
             button_d.set_text(str(self.question.answers[3]))
-            question_string = str(self.question.left_question) + ' + ' +str(self.question.right_question) + '= ?'
-            self.question_text_label = self.lg_font.render(question_string, 1, (0,0,0))
+            self.question_text_label = self.lg_font.render(str(self.question), 1, (0,0,0))
             self.hurdle_number += 1
             self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
             self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
