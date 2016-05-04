@@ -143,7 +143,7 @@ class MathHurdler:
         question_board = question_board.convert()
         question_board.fill(Color.WHITE)
 
-        menu_button = Button(
+        play_button = Button(
             'Play',
             self.lg_font,
             Color.BLACK,
@@ -154,13 +154,9 @@ class MathHurdler:
             -2
         )
 
-        pause_label = self.lg_font.render('PAUSED',1, Color.BLACK)
+        pause_label = self.lg_font.render('PAUSED', 1, Color.BLACK)
 
         def reset():
-            self.running = True
-            self.playing = False
-            self.gameover = False
-            self.paused = False
             self.last_answer = -1
             question_dirty = True
 
@@ -188,13 +184,13 @@ class MathHurdler:
             self.buttons[2].set_text(str(self.question.answers[2]))
             self.buttons[3].set_text(str(self.question.answers[3]))
 
-            self.question_text_label = self.lg_font.render(str(self.question), 1, (0,0,0))
+            self.question_text_label = self.lg_font.render(str(self.question), 1, Color.BLACK)
             self.hurdle_number += 1
-            self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
-            self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
-            question_board.fill((255, 255, 255))
+            self.score_label = self.lg_font.render(str(self.points),1,Color.BLACK)
+            self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, Color.BLACK)
+            question_board.fill(Color.WHITE)
 
-            self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
+            self.score_label = self.lg_font.render(str(self.points), 1, Color.BLACK)
 
         def set_answer(answer):
             self.last_answer = Fraction(self.buttons[answer].text)
@@ -202,7 +198,7 @@ class MathHurdler:
         def evaluate_answer(answer):
             if self.question.is_answer(answer):
                 self.points += 100
-                self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
+                self.score_label = self.lg_font.render(str(self.points), 1, Color.BLACK)
             else:
                 self.set_gameover(True)
 
@@ -219,8 +215,12 @@ class MathHurdler:
                         elif event.key == pygame.K_r:
                             reset()
                     elif event.type == pygame.MOUSEBUTTONDOWN:
-                        for i in range(0,3):
-                            self.buttons[i].mouse_click(pygame.mouse.get_pos(),set_answer, i)
+                        for i in range(0, 3):
+                            self.buttons[i].mouse_click(
+                                pygame.mouse.get_pos(),
+                                set_answer,
+                                i
+                            )
 
                 screen_size = screen.get_size()
 
@@ -306,7 +306,7 @@ class MathHurdler:
 
                 screen.blit(ground, (0, screen_size[1] - ground.get_height()))
                 button_panel_x = ground.get_width()/4
-                button_panel_y = screen_size[1] - ground.get_height() + ground.get_height()/3+10
+                button_panel_y = screen_size[1] - ground.get_height() + ground.get_height() / 3 + 10
                 screen.blit(button_panel, (button_panel_x, button_panel_y))
 
                 self.buttons[0].rect.x = button_panel_x
@@ -334,6 +334,9 @@ class MathHurdler:
                 # Try to stay at 30 FPS
                 self.clock.tick(30)
             else:
+                def start_game():
+                    self.set_playing(True)
+
                 #in the menu
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -343,14 +346,19 @@ class MathHurdler:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p:
                             self.set_playing(True)
+                    elif event.type == pygame.MOUSEBUTTONDOWN:
+                        play_button.mouse_click(
+                            pygame.mouse.get_pos(),
+                            start_game
+                        )
 
                 screen_size = screen.get_size()
                 
                 screen.fill(background_color);
                 
-                menu_button.rect.x = (screen_size[0] - menu_button.rect.width) / 2
-                menu_button.rect.y = (screen_size[1] - menu_button.rect.height) / 2
-                menu_button.draw(screen)
+                play_button.rect.x = (screen_size[0] - play_button.rect.width) / 2
+                play_button.rect.y = (screen_size[1] - play_button.rect.height) / 2
+                play_button.draw(screen)
                 
                 pygame.display.flip()
                 
