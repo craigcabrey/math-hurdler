@@ -6,6 +6,7 @@ class Button(object):
     def __init__(self, text, font, font_color, height, width, color, border_color=None, border_thickness=None):
         self.image = pygame.Surface((height,width))
         self.rect = self.image.get_rect()
+        self.color = color
         if border_thickness and border_color:
             self.image.fill(border_color)
             self.image.fill(color,self.rect.inflate(border_thickness,border_thickness))
@@ -32,3 +33,9 @@ class Button(object):
         self.text = text
         self.label = self.font.render(self.text,1,self.font_color)
         self.label_rect = self.label.get_rect()
+
+    def set_selected(selected):
+        if selected:
+            self.image.fill((self.color[0]*.5, self.color[1]*.5, self.color[2]*.5))
+        else
+            self.image.fill(self.color)
