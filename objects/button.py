@@ -2,7 +2,6 @@
 import pygame
 
 class Button(object):
-
     def __init__(self, text, font, font_color, height, width, color, border_color=None, border_thickness=None):
         self.image = pygame.Surface((height,width))
         self.rect = self.image.get_rect()
@@ -21,13 +20,9 @@ class Button(object):
         surface.blit(self.image,self.rect)
         surface.blit(self.label,self.label_rect)
 
-    def mouse_click(self, mouse, action):
+    def mouse_click(self, mouse, action, *args):
         if self.rect.collidepoint(mouse):
-            action()
-            
-    def mouse_click(self, mouse, action, arg):
-        if self.rect.collidepoint(mouse):
-            action(arg)
+            action(*args)
 
     def set_text(self, text):
         self.text = text
