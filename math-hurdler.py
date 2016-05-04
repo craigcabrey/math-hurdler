@@ -44,6 +44,8 @@ class MathHurdler:
         self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
         self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
+        self.buttons = []
+
     def set_paused(self, paused):
         self.paused = paused
 
@@ -85,6 +87,8 @@ class MathHurdler:
 
         button_d = Button( str(self.question.answers[3]), self.lg_font,(0,0,0), button_panel.get_width()/2,
                            button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
+
+        self.buttons = [button_a,button_b,button_c,button_d]
 
         grass = pygame.draw.line(ground,(0, 255, 0), (0, 0), (ground.get_width(), 0), ground.get_height()/2)
 
@@ -138,7 +142,8 @@ class MathHurdler:
                     elif event.key == pygame.K_p:
                         self.paused = not self.paused
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    button_a.mouse_click(pygame.mouse.get_pos(),answer_problem)
+                    for button in self.buttons:
+                        button.mouse_click(pygame.mouse.get_pos(),answer_problem)
 
             screen_size = screen.get_size()
 
