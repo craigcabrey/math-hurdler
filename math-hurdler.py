@@ -30,7 +30,7 @@ class MathHurdler:
         self.font = pygame.font.SysFont('monospace', 36)
         self.lg_font = pygame.font.SysFont('monospace', 60)
 
-        self.hurdle_number = 1
+        self.hurdle_number = 0
 
         self.points = 0
 
