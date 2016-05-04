@@ -10,6 +10,7 @@ import random
 import os
 from sprites.sun import Sun
 from objects.button import Button
+from question import Question
 
 class MathHurdler:
     def __init__(self):
@@ -36,6 +37,12 @@ class MathHurdler:
         self.hurdle_number = 1
 
         self.points = 0;
+
+        self.question = Question()
+        question_string = str(self.question.left_question) + ' + ' +str(self.question.right_question) + '= ?'
+        self.question_text_label = self.lg_font.render(question_string, 1, (0,0,0))
+        self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
+        self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
     def set_paused(self, paused):
         self.paused = paused
@@ -67,21 +74,20 @@ class MathHurdler:
 
         button_panel = pygame.Surface((screen_size[0]/3, screen_size[1] / 7))
 
-        button_a = Button('3/4', self.lg_font,(0,0,0), button_panel.get_width()/2,
+        button_a = Button( str(self.question.answers[0]), self.lg_font,(0,0,0), button_panel.get_width()/2,
                            button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
 
-        button_b = Button('0', self.lg_font,(0,0,0), button_panel.get_width()/2,
+        button_b = Button( str(self.question.answers[1]), self.lg_font,(0,0,0), button_panel.get_width()/2,
                            button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
 
-        button_c = Button('1', self.lg_font,(0,0,0), button_panel.get_width()/2,
+        button_c = Button( str(self.question.answers[2]), self.lg_font,(0,0,0), button_panel.get_width()/2,
                            button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
 
-        button_d = Button('1/4', self.lg_font,(0,0,0), button_panel.get_width()/2,
+        button_d = Button( str(self.question.answers[3]), self.lg_font,(0,0,0), button_panel.get_width()/2,
                            button_panel.get_height()/2, (255,255,255), (0,0,0), -2)
 
         grass = pygame.draw.line(ground,(0, 255, 0), (0, 0), (ground.get_width(), 0), ground.get_height()/2)
 
-        score_label = self.lg_font.render(str(self.points),1,(0,0,0))
         points_label = self.lg_font.render('POINTS',1,(0,0,0))
 
         horse = pygame.image.load(self.get_asset_path('color_unicorn.png'))
@@ -102,14 +108,19 @@ class MathHurdler:
         question_board = question_board.convert()
         question_board.fill((255, 255, 255))
 
-        question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
-        question = self.lg_font.render("3/4 + 1/4 = ?", 1, (0,0,0))
-
         def answer_problem():
-            button_a.set_text('jlk')
-            button_b.set_text('hol')
-            button_c.set_text('abc')
-            button_d.set_text('def')
+            self.question = Question()
+            button_a.set_text(str(self.question.answers[0]))
+            button_b.set_text(str(self.question.answers[1]))
+            button_c.set_text(str(self.question.answers[2]))
+            button_d.set_text(str(self.question.answers[3]))
+            question_string = str(self.question.left_question) + ' + ' +str(self.question.right_question) + '= ?'
+            self.question_text_label = self.lg_font.render(question_string, 1, (0,0,0))
+            self.hurdle_number += 1
+            self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
+            question_board.fill((255, 255, 255))
+            self.points += 100
+            self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
 
         while self.running:
@@ -145,12 +156,6 @@ class MathHurdler:
 
                 if ( (active_horse == horse_jump) and (not hurdle_rect.colliderect(horse_rect)) ):
                     active_horse = horse
-                    self.hurdle_number += 1
-                    question_board.fill((255, 255, 255))
-                    question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
-                    self.points += 100
-                    score_label = []
-                    score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
                 if (self.horse_change == self.horse_change_semaphore):
                     if (active_horse == horse):
@@ -177,11 +182,11 @@ class MathHurdler:
             allsprites.draw(screen)
 
             screen.blit(question_board, (screen_size[0] / 4, screen_size[1] / 5))
-            question_board.blit(question_label, (10,10))
-            question_board.blit(question, (10,question_label.get_height()+10))
+            question_board.blit(self.question_label, (10,10))
+            question_board.blit(self.question_text_label, (10,self.question_label.get_height()+10))
 
-            screen.blit(score_label, (sun.rect.x+sun.image.get_width()/4,sun.rect.y+sun.image.get_height()/3))
-            screen.blit(points_label, (sun.rect.x+sun.image.get_width()/4, sun.rect.y+sun.image.get_height()/3+score_label.get_height()))
+            screen.blit(self.score_label, (sun.rect.x+sun.image.get_width()/4,sun.rect.y+sun.image.get_height()/3))
+            screen.blit(points_label, (sun.rect.x+sun.image.get_width()/4, sun.rect.y+sun.image.get_height()/3+self.score_label.get_height()))
 
             screen.blit(ground, (0, screen_size[1] - ground.get_height()))
             button_panel_x = ground.get_width()/4
