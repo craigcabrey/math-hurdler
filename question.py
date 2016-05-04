@@ -19,11 +19,10 @@ class Question:
                 )
 
     def is_answer(self, fraction):
-        return fraction == self.answers(self.answer)
+        return fraction == self.answers[self.answer]
 
     def __str__(self):
         return '{left} + {right} = ?'.format(
             left=self.left_side,
             right=self.right_side
         )
-
