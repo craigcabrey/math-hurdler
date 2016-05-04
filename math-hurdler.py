@@ -85,6 +85,7 @@ class MathHurdler:
         self.gameover = False
         self.paused = False
         self.last_answer = -1
+        self.last_answer_index = -1
         question_dirty = True
 
         self.score = 0
@@ -157,7 +158,6 @@ class MathHurdler:
         pause_label = self.lg_font.render('PAUSED', 1, Color.BLACK)
 
         def reset():
-            self.last_answer = -1
             question_dirty = True
 
             self.score = 0
@@ -174,7 +174,8 @@ class MathHurdler:
             active_horse = horse
 
             horse_x = display_info.current_h/3
-            
+
+            set_answer(-1)
 
         def generate_question():
             self.question = Question()
@@ -193,7 +194,18 @@ class MathHurdler:
             self.score_label = self.lg_font.render(str(self.points), 1, Color.BLACK)
 
         def set_answer(answer):
-            self.last_answer = Fraction(self.buttons[answer].text)
+            #unselect the previous answer button
+            if self.last_answer_index >= 0:
+                self.buttons[self.last_answer_index].set_selected(False)
+            
+            if answer >= 0:
+                self.last_answer = Fraction(self.buttons[answer].text)
+                self.buttons[answer].set_selected(True)
+                self.last_answer_index = answer
+            else:
+                self.last_answer = -1
+                self.last_answer_index = -1
+            
 
         def evaluate_answer(answer):
             if self.question.is_answer(answer):
@@ -267,7 +279,7 @@ class MathHurdler:
                     elif question_dirty:
                         generate_question()
                         question_dirty = False
-                        self.last_answer = -1
+                        set_answer(-1)
 
                 if self.gameover:
                     #spin the horse
