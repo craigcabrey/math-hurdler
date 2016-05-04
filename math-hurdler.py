@@ -73,9 +73,11 @@ class MathHurdler:
         self.running = True
         self.playing = False
         self.gameover = False
+        self.paused = False
         last_answer = -1
         question_dirty = True
-        
+
+        self.score = 0
 
         display_info = pygame.display.Info()
         background_color = (126, 192, 238)
@@ -111,7 +113,7 @@ class MathHurdler:
         horse = pygame.transform.scale(horse,(horse.get_width() / 3, horse.get_height() / 3))
         horse_jump = pygame.transform.rotate(horse,45)
         horse_gallop = pygame.transform.rotate(horse, -15)
-        horse_dead = pygame.transform.rotate(horse, -180)
+        horse_dead = pygame.transform.rotate(horse,-90)
 
         active_horse = horse_gallop
 
@@ -131,7 +133,31 @@ class MathHurdler:
 
         pause_label = self.lg_font.render('PAUSED',1,(0,0,0))
 
-        def answer_problem():
+        def reset():
+            self.running = True
+            self.playing = False
+            self.gameover = False
+            self.paused = False
+            last_answer = -1
+            question_dirty = True
+
+            self.score = 0
+            self.hurdle_number = 0
+            
+            self.x = -100
+            self.y = 100
+
+            self.vx = 10
+            self.vy = 0
+
+            self.direction = -1
+
+            active_horse = horse
+
+            horse_x = display_info.current_h/3
+            
+
+        def generate_question():
             self.question = Question()
             button_a.set_text(str(self.question.answers[0]))
             button_b.set_text(str(self.question.answers[1]))
@@ -140,9 +166,10 @@ class MathHurdler:
             question_string = str(self.question.left_question) + ' + ' +str(self.question.right_question) + '= ?'
             self.question_text_label = self.lg_font.render(question_string, 1, (0,0,0))
             self.hurdle_number += 1
+            self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
             self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
             question_board.fill((255, 255, 255))
-            self.points += 100
+
             self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
         def set_answer(answer):
@@ -150,6 +177,9 @@ class MathHurdler:
 
         def evaluate_answer(answer):
             if self.question.answer == answer:
+                self.points += 100
+                self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
+            else:
                 self.set_gameover(True)
 
         while self.running:
@@ -167,9 +197,11 @@ class MathHurdler:
                             self.direction = 1
                         elif event.key == pygame.K_p:
                             self.paused = not self.paused
+                        elif event.key == pygame.K_r:
+                            reset()
                     elif event.type == pygame.MOUSEBUTTONDOWN:
-                        for button in self.buttons:
-                            button.mouse_click(pygame.mouse.get_pos(),answer_problem)
+                        for i in range(0,3):
+                            self.buttons[i].mouse_click(pygame.mouse.get_pos(),set_answer, i)
 
                 screen_size = screen.get_size()
 
@@ -194,6 +226,8 @@ class MathHurdler:
                             active_horse = horse_gallop
                         elif (active_horse == horse_gallop):
                             active_horse = horse
+                        else:
+                            active_horse = horse
                         self.horse_change = 0
 
                     self.horse_change += 1
@@ -211,14 +245,15 @@ class MathHurdler:
                             self.y -= 200
 
                     #if not colliding with hurdle and question still dirty, generate new question
-                    else if question_dirty:
-                        answer_problem()
+                    elif question_dirty:
+                        generate_question()
                         question_dirty = False
                         last_answer = -1
 
                 if self.gameover:
                     #spin the horse
-                    active_horse = pygame.transform.rotate(horse, pygame.time.get_ticks())
+                    #active_horse = pygame.transform.rotate(horse_dead, pygame.time.get_ticks())
+                    active_horse = horse_dead
 
                 # Set the "sky" color to blue
                 screen.fill(background_color)
