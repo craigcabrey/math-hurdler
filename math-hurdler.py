@@ -226,13 +226,15 @@ class MathHurdler:
                             self.paused = not self.paused
                         elif event.key == pygame.K_r:
                             reset()
+                            self.set_playing(False)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
-                        for i in range(0, 3):
-                            self.buttons[i].mouse_click(
-                                pygame.mouse.get_pos(),
-                                set_answer,
-                                i
-                            )
+                        if not self.gameover:
+                            for i in range(0, 4):
+                                self.buttons[i].mouse_click(
+                                    pygame.mouse.get_pos(),
+                                    set_answer,
+                                    i
+                                )
 
                 screen_size = screen.get_size()
 

@@ -28,13 +28,21 @@ class Button(object):
         self.label = self.font.render(self.text,1,self.font_color)
         self.label_rect = self.label.get_rect()
 
-    def set_color(self, color):
-        self.color = color
-        print(self.color)
+    def set_color(self, color, save_color=True):
+        if save_color:
+            self.color = color
+            self.selected_color = (color[0] * .8, color[1] * .8, color[2] * .8)
+            
         if self.border_thickness and self.border_color:
             self.image.fill(self.border_color)
             self.rect = self.image.get_rect()
             box = self.rect.inflate(self.border_thickness,self.border_thickness)
-            self.image.fill(self.color,box)
+            self.image.fill(color,box)
         else:
-            self.image.fill(self.color)
+            self.image.fill(color)
+
+    def set_selected(self, selected):
+        if selected:
+            self.set_color(self.selected_color, False)
+        else:
+            self.set_color(self.color, False)
