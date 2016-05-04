@@ -1,12 +1,10 @@
-
 import random
 from fractions import Fraction
 
 class Question:
-
     def __init__(self):
-        self.left_question = Fraction(random.randrange(1,10),random.randrange(1,10))
-        self.right_question = Fraction(random.randrange(1,10),random.randrange(1,10))
+        self.left_side = Fraction(random.randrange(1,10), random.randrange(1,10))
+        self.right_side = Fraction(random.randrange(1,10), random.randrange(1,10))
         self.populate_multiple_choice()
 
     def populate_multiple_choice(self):
@@ -14,9 +12,17 @@ class Question:
         self.answers = []
         for num in range(0,4):
             if num == self.answer:
-                self.answers.append(self.left_question+self.right_question)
+                self.answers.append(self.left_side + self.right_side)
             else:
-                self.answers.append(Fraction(random.randrange(1,10),random.randrange(1,10)))
+                self.answers.append(
+                    Fraction(random.randrange(1, 10), random.randrange(1, 10))
+                )
 
-    def is_answer(self,fraction):
-        return (fraction == self.answers[self.answer])
+    def is_answer(self, fraction):
+        return fraction == self.answers[self.answer]
+
+    def __str__(self):
+        return '{left} + {right} = ?'.format(
+            left=self.left_side,
+            right=self.right_side
+        )

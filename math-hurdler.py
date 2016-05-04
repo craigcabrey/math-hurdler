@@ -1,13 +1,9 @@
 #!/usr/bin/env python2
 
-#import gi
-
-#gi.require_version('Gtk', '3.0')
-
-#import gi.repository.Gtk
 import pygame
 import random
 import os
+
 from sprites.sun import Sun
 from objects.button import Button
 from question import Question
@@ -32,17 +28,17 @@ class MathHurdler:
         self.horse_change_semaphore = 3
         self.horse_change = 0
 
-        self.font = pygame.font.SysFont("monospace", 36)
-        self.lg_font = pygame.font.SysFont("monospace", 72)
+        self.font = pygame.font.SysFont('monospace', 36)
+        self.lg_font = pygame.font.SysFont('monospace', 60)
 
-        self.hurdle_number = 1
+        self.hurdle_number = 0
 
         self.points = 0
 
         self.question = Question()
-        question_string = str(self.question.left_question) + ' + ' +str(self.question.right_question) + '= ?'
-        self.question_text_label = self.lg_font.render(question_string, 1, (0,0,0))
-        self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
+
+        self.question_text_label = self.lg_font.render(str(self.question), 1, (0,0,0))
+        self.question_label = self.font.render('Hurdle #' + str(self.hurdle_number), 1, (0,0,0))
         self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
         self.buttons = []
@@ -164,8 +160,7 @@ class MathHurdler:
             button_b.set_text(str(self.question.answers[1]))
             button_c.set_text(str(self.question.answers[2]))
             button_d.set_text(str(self.question.answers[3]))
-            question_string = str(self.question.left_question) + ' + ' +str(self.question.right_question) + '= ?'
-            self.question_text_label = self.lg_font.render(question_string, 1, (0,0,0))
+            self.question_text_label = self.lg_font.render(str(self.question), 1, (0,0,0))
             self.hurdle_number += 1
             self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
             self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
@@ -184,9 +179,6 @@ class MathHurdler:
                 self.set_gameover(True)
 
         while self.running:
-            #while gi.repository.Gtk.events_pending():
-            #    gi.repository.Gtk.main_iteration()
-
             if self.playing:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -268,8 +260,21 @@ class MathHurdler:
                 question_board.blit(self.question_label, (10,10))
                 question_board.blit(self.question_text_label, (10,self.question_label.get_height()+10))
 
-                screen.blit(self.score_label, (sun.rect.x+sun.image.get_width()/4,sun.rect.y+sun.image.get_height()/3))
-                screen.blit(points_label, (sun.rect.x+sun.image.get_width()/4, sun.rect.y+sun.image.get_height()/3+self.score_label.get_height()))
+                screen.blit(
+                    self.score_label,
+                    (
+                        sun.rect.x + sun.image.get_width() / 4,
+                        sun.rect.y + sun.image.get_height() / 3
+                    )
+                )
+
+                screen.blit(
+                    points_label,
+                    (
+                        sun.rect.x + sun.image.get_width() / 4,
+                        sun.rect.y + sun.image.get_height() / 3 + self.score_label.get_height()
+                    )
+                )
 
                 screen.blit(ground, (0, screen_size[1] - ground.get_height()))
                 button_panel_x = ground.get_width()/4
@@ -300,7 +305,6 @@ class MathHurdler:
 
                 # Try to stay at 30 FPS
                 self.clock.tick(30)
-                
             else:
                 #in the menu
                 for event in pygame.event.get():
