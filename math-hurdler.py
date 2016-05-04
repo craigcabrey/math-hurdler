@@ -1,13 +1,9 @@
 #!/usr/bin/env python2
 
-import gi
-
-gi.require_version('Gtk', '3.0')
-
-import gi.repository.Gtk
 import pygame
 import random
 import os
+
 from sprites.sun import Sun
 from objects.button import Button
 from question import Question
@@ -31,17 +27,22 @@ class MathHurdler:
         self.horse_change_semaphore = 3
         self.horse_change = 0
 
-        self.font = pygame.font.SysFont("monospace", 36)
-        self.lg_font = pygame.font.SysFont("monospace", 72)
+        self.font = pygame.font.SysFont('monospace', 36)
+        self.lg_font = pygame.font.SysFont('monospace', 60)
 
         self.hurdle_number = 1
 
         self.points = 0
 
         self.question = Question()
-        question_string = str(self.question.left_question) + ' + ' +str(self.question.right_question) + '= ?'
+
+        question_string = '{} + {} = ?'.format(
+            self.question.left_question,
+            self.question.right_question
+        )
+
         self.question_text_label = self.lg_font.render(question_string, 1, (0,0,0))
-        self.question_label = self.font.render("Hurdle #" + str(self.hurdle_number), 1, (0,0,0))
+        self.question_label = self.font.render('Hurdle #' + str(self.hurdle_number), 1, (0,0,0))
         self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
         self.buttons = []
@@ -126,11 +127,7 @@ class MathHurdler:
             self.points += 100
             self.score_label = self.lg_font.render(str(self.points),1,(0,0,0))
 
-
         while self.running:
-            while gi.repository.Gtk.events_pending():
-                gi.repository.Gtk.main_iteration()
-
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return
@@ -147,9 +144,12 @@ class MathHurdler:
 
             screen_size = screen.get_size()
 
-            if not self.paused:
+            # Set the "sky" color to blue
+            screen.fill(background_color)
 
+            if not self.paused:
                 self.x += self.vx * self.direction
+
                 if self.direction == 1 and self.x > screen.get_width() + 50:
                     self.x = -50
                 elif self.direction == -1 and self.x < -50:
@@ -176,9 +176,6 @@ class MathHurdler:
                     active_horse = horse_jump
                     self.y -= 200
 
-            # Set the "sky" color to blue
-            screen.fill(background_color)
-
             sun = Sun()
             sun.rect.x = screen_size[1] + sun.image.get_width()
             sun.rect.y = 0
@@ -190,8 +187,25 @@ class MathHurdler:
             question_board.blit(self.question_label, (10,10))
             question_board.blit(self.question_text_label, (10,self.question_label.get_height()+10))
 
-            screen.blit(self.score_label, (sun.rect.x+sun.image.get_width()/4,sun.rect.y+sun.image.get_height()/3))
-            screen.blit(points_label, (sun.rect.x+sun.image.get_width()/4, sun.rect.y+sun.image.get_height()/3+self.score_label.get_height()))
+            score_label_rect = self.score_label.get_rect()
+            #score_label_rect.centerx = sun.image.get_width()
+
+            screen.blit(
+                self.score_label,
+                (
+                    sun.rect.x + sun.image.get_width() / 4,
+                    sun.rect.y + sun.image.get_height() / 3
+                ),
+                area=score_label_rect
+            )
+
+            screen.blit(
+                points_label,
+                (
+                    sun.rect.x + sun.image.get_width() / 4,
+                    sun.rect.y + sun.image.get_height() / 3 + self.score_label.get_height()
+                )
+            )
 
             screen.blit(ground, (0, screen_size[1] - ground.get_height()))
             button_panel_x = ground.get_width()/4
