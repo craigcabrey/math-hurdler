@@ -29,3 +29,9 @@ class Horse(pygame.sprite.Sprite):
         elif (horse == Horse.DEAD):
             self.image = self.horse_dead
         self.active_horse = horse
+
+    def gallop(self):
+        if (self.active_horse == Horse.BASE):
+            self.set_horse(Horse.GALLOP)
+        elif (self.active_horse == Horse.GALLOP):
+            self.set_horse(Horse.BASE)

@@ -249,10 +249,7 @@ class MathHurdler:
                         horse.set_horse(Horse.BASE)
                         horse.rect.y = display_info.current_h - hurdle.get_height() - (2*ground.get_height()/3)
                     if (self.horse_change == self.horse_change_semaphore):
-                        if (horse.active_horse == Horse.BASE):
-                            horse.set_horse(Horse.GALLOP)
-                        elif (horse.active_horse == Horse.GALLOP):
-                            horse.set_horse(Horse.BASE)
+                        horse.gallop()
                         self.horse_change = 0
 
                     self.horse_change += 1
@@ -375,10 +372,7 @@ class MathHurdler:
                 screen_size = screen.get_size()
 
                 if (self.horse_change == self.horse_change_semaphore):
-                    if (horse.active_horse == Horse.BASE):
-                        horse.set_horse(Horse.GALLOP)
-                    elif (horse.active_horse == Horse.GALLOP):
-                        horse.set_horse(Horse.BASE)
+                    horse.gallop()
                     self.horse_change = 0
 
                 self.horse_change += 1
