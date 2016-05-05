@@ -16,6 +16,7 @@ class Color:
     SKYBLUE = (126, 192, 238)
     BROWN = (127, 96, 0)
     GREEN = (0, 255, 0)
+    RED = (255, 0, 0)
 
 class MathHurdler:
     def __init__(self):
@@ -215,6 +216,11 @@ class MathHurdler:
             self.buttons[2].set_text(str(self.question.answers[2]))
             self.buttons[3].set_text(str(self.question.answers[3]))
 
+            self.buttons[0].set_color(self.buttons[0].color, False)
+            self.buttons[1].set_color(self.buttons[0].color, False)
+            self.buttons[2].set_color(self.buttons[0].color, False)
+            self.buttons[3].set_color(self.buttons[0].color, False)
+
             self.question_text_label = self.lg_font.render(str(self.question), 1, Color.BLACK)
             self.hurdle_number += 1
             self.score_label = self.lg_font.render(str(self.points),1,Color.BLACK)
@@ -244,11 +250,16 @@ class MathHurdler:
                 self.jump_sfx.play()
             else:
                 self.set_gameover(True)
+                if self.last_answer_index >= 0:
+                    self.buttons[self.last_answer_index].set_color(Color.RED, False)
+                
+            self.buttons[self.question.answer].set_color(Color.GREEN, False)
 
         while self.running:
             if self.playing:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        pygame.quit()
                         return
                     elif event.type == pygame.VIDEORESIZE:
                         pygame.display.set_mode(event.size, pygame.RESIZABLE)
@@ -401,6 +412,7 @@ class MathHurdler:
                 #in the menu
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
+                        pygame.quit()
                         return
                     elif event.type == pygame.VIDEORESIZE:
                         pygame.display.set_mode(event.size, pygame.RESIZABLE)
