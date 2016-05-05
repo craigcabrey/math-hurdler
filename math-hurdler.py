@@ -3,6 +3,7 @@
 import pygame
 import random
 import os
+import math
 
 from sprites.sun import Sun
 from objects.button import Button
@@ -385,12 +386,51 @@ class MathHurdler:
                         )
 
                 screen_size = screen.get_size()
-                
-                screen.fill(background_color);
-                
+
+                if (self.horse_change == self.horse_change_semaphore):
+                    if (active_horse == horse):
+                        active_horse = horse_gallop
+                    elif (active_horse == horse_gallop):
+                        active_horse = horse
+                    else:
+                        active_horse = horse
+                    self.horse_change = 0
+
+                self.horse_change += 1
+
+                #draw rainbow background fill
+                screen.fill(
+                    (
+                        math.floor(math.sin(pygame.time.get_ticks()*.001)*55 + 200),
+                        math.floor(math.sin(pygame.time.get_ticks()*.001+math.pi)*55 + 200),
+                        math.floor(math.sin(pygame.time.get_ticks()*.001+math.pi*.5)*55 + 200)
+                    )
+                )
+
+                #draw menu horse
+                screen.blit(
+                    active_horse,
+                    (
+                        (screen_size[0] - horse.get_width()) / 2,
+                        (screen_size[1] - horse.get_height()) / 2 + 200
+                    )
+                )
+
+                #draw play button
                 play_button.rect.x = (screen_size[0] - play_button.rect.width) / 2
                 play_button.rect.y = (screen_size[1] - play_button.rect.height) / 2
                 play_button.draw(screen)
+
+                #draw menu label
+                screen.blit(
+                    menu_label,
+                    (
+                        (screen_size[0] - menu_label.get_width()) / 2,
+                        (screen_size[1] - menu_label.get_height()) / 2 - 200,
+                    )
+                )
+                
+                
                 
                 pygame.display.flip()
                 
