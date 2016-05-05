@@ -230,7 +230,6 @@ class MathHurdler:
 
                 screen_size = screen.get_size()
 
-
                 if not self.paused and not self.gameover:
 
                     self.x += self.vx * self.direction
@@ -276,8 +275,7 @@ class MathHurdler:
                 screen.fill(background_color)
 
                 sun = Sun()
-                sun.rect.x = screen_size[1] + sun.image.get_width()
-                sun.rect.y = 0
+                sun.rect.topleft = (screen_size[0]- sun.image.get_width(),0)
 
                 screen.blit(question_board, (screen_size[0] / 4, screen_size[1] / 5))
                 question_board.blit(self.question_label, (10,10))
