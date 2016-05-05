@@ -37,6 +37,7 @@ class MathHurdler:
 
         self.font = pygame.font.SysFont('monospace', 36)
         self.lg_font = pygame.font.SysFont('monospace', 60)
+        self.xlg_font = pygame.font.SysFont('monospace', 90)
 
         self.hurdle_number = 0
 
@@ -129,7 +130,7 @@ class MathHurdler:
         horse = pygame.transform.scale(horse,(horse.get_width() / 3, horse.get_height() / 3))
         horse_jump = pygame.transform.rotate(horse,45)
         horse_gallop = pygame.transform.rotate(horse, -15)
-        horse_dead = pygame.transform.rotate(horse,-90)
+        horse_dead = pygame.transform.rotate(horse, 150)
 
         active_horse = horse_gallop
 
@@ -155,7 +156,8 @@ class MathHurdler:
             -2
         )
 
-        pause_label = self.lg_font.render('PAUSED', 1, Color.BLACK)
+        menu_label = self.xlg_font.render('MATH HURDLER', 1, Color.BLACK)
+        gameover_label = self.xlg_font.render('GAME OVER', 1, Color.BLACK)
 
         def reset():
             question_dirty = True
@@ -342,13 +344,29 @@ class MathHurdler:
                 screen.blit(active_horse, (horse_x, self.y))
                 screen.blit(hurdle,(self.x,hurdle_y))
 
+                if self.gameover:
+                    screen.blit(
+                        gameover_label,
+                        (
+                            (screen_size[0] - gameover_label.get_width()) / 2,
+                            (screen_size[1] - gameover_label.get_height()) / 2,
+                        )
+                    )
+
                 # Draw the frame
                 pygame.display.flip()
 
+                if self.gameover:
+                    pygame.time.wait(3000)
+                    self.set_playing(False)
+                    reset()
+
                 # Try to stay at 30 FPS
                 self.clock.tick(30)
+                
             else:
                 def start_game():
+                    reset()
                     self.set_playing(True)
 
                 #in the menu
