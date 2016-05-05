@@ -24,10 +24,7 @@ class MathHurdler:
         self.clock = pygame.time.Clock()
 
         self.x = -100
-        self.y = 100
-
         self.vx = 10
-        self.vy = 0
 
         self.paused = False
         self.direction = -1
@@ -163,7 +160,6 @@ class MathHurdler:
             
             self.x = -100
             self.vx = 10
-            self.vy = 0
 
             self.direction = -1
 
@@ -287,22 +283,6 @@ class MathHurdler:
                 question_board.blit(self.question_label, (10,10))
                 question_board.blit(self.question_text_label, (10,self.question_label.get_height()+10))
 
-                screen.blit(
-                    self.score_label,
-                    (
-                        sun.rect.x + sun.image.get_width() / 4,
-                        sun.rect.y + sun.image.get_height() / 3
-                    )
-                )
-
-                screen.blit(
-                    points_label,
-                    (
-                        sun.rect.x + sun.image.get_width() / 4,
-                        sun.rect.y + sun.image.get_height() / 3 + self.score_label.get_height()
-                    )
-                )
-
                 screen.blit(ground, (0, screen_size[1] - ground.get_height()))
                 button_panel_x = ground.get_width()/4
                 button_panel_y = screen_size[1] - ground.get_height() + ground.get_height() / 3 + 10
@@ -328,6 +308,22 @@ class MathHurdler:
 
                 allsprites = pygame.sprite.RenderPlain((sun,horse))
                 allsprites.draw(screen)
+
+                screen.blit(
+                    self.score_label,
+                    (
+                        sun.rect.x + sun.image.get_width() / 4,
+                        sun.rect.y + sun.image.get_height() / 3
+                    )
+                )
+
+                screen.blit(
+                    points_label,
+                    (
+                        sun.rect.x + sun.image.get_width() / 4,
+                        sun.rect.y + sun.image.get_height() / 3 + self.score_label.get_height()
+                    )
+                )
 
                 if self.gameover:
                     screen.blit(
