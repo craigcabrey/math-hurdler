@@ -375,12 +375,10 @@ class MathHurdler:
                 screen_size = screen.get_size()
 
                 if (self.horse_change == self.horse_change_semaphore):
-                    if (active_horse == horse):
-                        active_horse = horse_gallop
-                    elif (active_horse == horse_gallop):
-                        active_horse = horse
-                    else:
-                        active_horse = horse
+                    if (horse.active_horse == Horse.BASE):
+                        horse.set_horse(Horse.GALLOP)
+                    elif (horse.active_horse == Horse.GALLOP):
+                        horse.set_horse(Horse.BASE)
                     self.horse_change = 0
 
                 self.horse_change += 1
@@ -395,13 +393,11 @@ class MathHurdler:
                 )
 
                 #draw menu horse
-                screen.blit(
-                    active_horse,
-                    (
-                        (screen_size[0] - horse.get_width()) / 2,
-                        (screen_size[1] - horse.get_height()) / 2 + 200
-                    )
-                )
+                horse.rect.x = (screen_size[0] - horse.image.get_width()) / 2
+                horse.rect.y = (screen_size[1] - horse.image.get_height()) / 2 + 200
+
+                menu_sprites = pygame.sprite.RenderPlain((horse))
+                menu_sprites.draw(screen)
 
                 #draw play button
                 play_button.rect.x = (screen_size[0] - play_button.rect.width) / 2
