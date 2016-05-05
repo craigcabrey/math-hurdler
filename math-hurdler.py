@@ -66,19 +66,43 @@ class MathHurdler:
 
         self.buttons = []
 
+        self.songs = [
+            self.get_sound_path('william_tell_overture_intro.wav'),
+            self.get_sound_path('william_tell_overture_race.wav')
+        ]
+
+        self.death_sfx = pygame.mixer.Sound(self.get_sound_path('sad_trombone.wav'))
+        self.jump_sfx = pygame.mixer.Sound(self.get_sound_path('success.wav'))
+
     def set_paused(self, paused):
         self.paused = paused
+        if paused:
+            pygame.mixer.music.stop()
+        else:
+            pygame.mixer.music.play(-1)
 
     def set_gameover(self, gameover):
         self.gameover = gameover
+        if gameover:
+            pygame.mixer.music.stop()
+            self.death_sfx.play()
 
     def set_playing(self, playing):
         self.playing = playing
         self.set_paused(False)
         self.set_gameover(False)
+        if playing:
+            pygame.mixer.music.load(self.songs[1])
+            pygame.mixer.music.play(-1)
+        else:
+            pygame.mixer.music.load(self.songs[0])
+            pygame.mixer.music.play(-1)
 
-    def get_asset_path(self, asset_name):
+    def get_image_path(self, asset_name):
         return os.path.join('./assets/images', asset_name)
+
+    def get_sound_path(self, sound_name):
+        return os.path.join('./assets/sounds', sound_name)
 
     # The main game loop.
     def run(self):
@@ -127,7 +151,7 @@ class MathHurdler:
 
         points_label = self.lg_font.render('POINTS', 1, Color.BLACK)
 
-        horse = pygame.image.load(self.get_asset_path('color_unicorn.png'))
+        horse = pygame.image.load(self.get_image_path('color_unicorn.png'))
         horse = pygame.transform.scale(horse,(horse.get_width() / 3, horse.get_height() / 3))
         horse_jump = pygame.transform.rotate(horse,45)
         horse_gallop = pygame.transform.rotate(horse, -15)
@@ -159,6 +183,9 @@ class MathHurdler:
 
         menu_label = self.xlg_font.render('MATH HURDLER', 1, Color.BLACK)
         gameover_label = self.xlg_font.render('GAME OVER', 1, Color.BLACK)
+
+        pygame.mixer.music.load(self.songs[0])
+        pygame.mixer.music.play(-1)
 
         def reset():
             question_dirty = True
@@ -214,6 +241,7 @@ class MathHurdler:
             if self.question.is_answer(answer):
                 self.points += 100
                 self.score_label = self.lg_font.render(str(self.points), 1, Color.BLACK)
+                self.jump_sfx.play()
             else:
                 self.set_gameover(True)
 
@@ -358,7 +386,7 @@ class MathHurdler:
                 pygame.display.flip()
 
                 if self.gameover:
-                    pygame.time.wait(3000)
+                    pygame.time.wait(6000)
                     self.set_playing(False)
                     reset()
 
