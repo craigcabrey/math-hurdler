@@ -113,8 +113,6 @@ class MathHurdler:
         self.last_answer_index = -1
         question_dirty = True
 
-        self.score = 0
-
         display_info = pygame.display.Info()
         background_color = Color.SKYBLUE
 
@@ -186,7 +184,7 @@ class MathHurdler:
         def reset():
             question_dirty = True
 
-            self.score = 0
+            self.points = 0
             self.hurdle_number = 0
             
             self.x = -100
@@ -256,9 +254,6 @@ class MathHurdler:
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p:
                             self.paused = not self.paused
-                        elif event.key == pygame.K_r:
-                            reset()
-                            self.set_playing(False)
                         elif event.key == pygame.K_c:
                             set_answer(self.question.answer_index)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
