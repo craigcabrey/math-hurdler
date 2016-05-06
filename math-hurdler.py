@@ -150,6 +150,9 @@ class MathHurdler:
 
         points_label = self.lg_font.render('POINTS', 1, Color.BLACK)
 
+        sun = Sun()
+        sun.rect.topleft = (screen_size[0]- sun.image.get_width(),0)
+
         horse = Horse()
         horse.rect.x = display_info.current_h/3
         horse.rect.y = display_info.current_h - horse.image.get_height() - ground.get_height()
@@ -313,8 +316,7 @@ class MathHurdler:
 
                 # Set the "sky" color to blue
                 screen.fill(background_color)
-
-                sun = Sun()
+                
                 sun.rect.topleft = (screen_size[0]- sun.image.get_width(),0)
 
                 screen.blit(question_board, (screen_size[0] / 4, screen_size[1] / 5))
