@@ -190,7 +190,7 @@ class MathHurdler:
             self.hurdle_number = 0
             
             self.x = -100
-            self.vx = 10
+            self.vx = 0
 
             self.direction = -1
 
@@ -259,6 +259,8 @@ class MathHurdler:
                         elif event.key == pygame.K_r:
                             reset()
                             self.set_playing(False)
+                        elif event.key == pygame.K_c:
+                            set_answer(self.question.answer_index)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         if not self.gameover:
                             for i in range(0, 4):
@@ -272,6 +274,9 @@ class MathHurdler:
 
                 if not self.paused and not self.gameover:
 
+                    #start at vx=5 and accelerate towards vx=10
+                    self.vx = 4 + (self.hurdle_number * 6) / (self.hurdle_number + 5)
+                    
                     self.x += self.vx * self.direction
                     if self.direction == 1 and self.x > screen.get_width() + 50:
                         self.x = -50
@@ -378,7 +383,7 @@ class MathHurdler:
                 pygame.display.flip()
 
                 if self.gameover:
-                    pygame.time.wait(6000)
+                    pygame.time.delay(6000)
                     self.set_playing(False)
                     reset()
 
@@ -397,9 +402,6 @@ class MathHurdler:
                         return
                     elif event.type == pygame.VIDEORESIZE:
                         pygame.display.set_mode(event.size, pygame.RESIZABLE)
-                    elif event.type == pygame.KEYDOWN:
-                        if event.key == pygame.K_p:
-                            self.set_playing(True)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         play_button.mouse_click(
                             pygame.mouse.get_pos(),
