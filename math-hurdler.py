@@ -129,7 +129,7 @@ class MathHurdler:
 
         self.buttons = [
             Button(
-                str(self.question.answers[i]),
+                str(self.question.choices[i]),
                 self.lg_font,
                 Color.BLACK,
                 button_panel.get_width() / 2,
@@ -199,12 +199,12 @@ class MathHurdler:
             set_answer(-1)
 
         def generate_question():
-            self.question = Question()
+            self.question.next()
 
-            self.buttons[0].set_text(str(self.question.answers[0]))
-            self.buttons[1].set_text(str(self.question.answers[1]))
-            self.buttons[2].set_text(str(self.question.answers[2]))
-            self.buttons[3].set_text(str(self.question.answers[3]))
+            self.buttons[0].set_text(str(self.question.choices[0]))
+            self.buttons[1].set_text(str(self.question.choices[1]))
+            self.buttons[2].set_text(str(self.question.choices[2]))
+            self.buttons[3].set_text(str(self.question.choices[3]))
 
             self.buttons[0].set_color(self.buttons[0].color, False)
             self.buttons[1].set_color(self.buttons[0].color, False)
@@ -219,15 +219,15 @@ class MathHurdler:
 
             self.score_label = self.lg_font.render(str(self.points), 1, Color.BLACK)
 
-        def set_answer(answer):
+        def set_answer(answer_index):
             #unselect the previous answer button
             if self.last_answer_index >= 0:
                 self.buttons[self.last_answer_index].set_selected(False)
             
-            if answer >= 0:
-                self.last_answer = Fraction(self.buttons[answer].text)
-                self.buttons[answer].set_selected(True)
-                self.last_answer_index = answer
+            if answer_index >= 0:
+                self.last_answer = Fraction(self.buttons[answer_index].text)
+                self.buttons[answer_index].set_selected(True)
+                self.last_answer_index = answer_index
             else:
                 self.last_answer = -1
                 self.last_answer_index = -1
@@ -243,7 +243,7 @@ class MathHurdler:
                 if self.last_answer_index >= 0:
                     self.buttons[self.last_answer_index].set_color(Color.RED, False)
                 
-            self.buttons[self.question.answer].set_color(Color.GREEN, False)
+            self.buttons[self.question.answer_index].set_color(Color.GREEN, False)
 
         while self.running:
             if self.playing:
