@@ -10,6 +10,7 @@ from sugar3.activity.widgets import ActivityToolbarButton
 from sugar3.graphics.toolbutton import ToolButton
 from sugar3.activity.widgets import StopButton
 
+pygame.init()
 
 import sugargame.canvas
 
