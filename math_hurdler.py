@@ -175,6 +175,17 @@ class MathHurdler:
             -2
         )
 
+        quit_button = Button(
+            'Quit',
+            self.lg_font,
+            Color.BLACK,
+            200,
+            100,
+            Color.WHITE,
+            Color.BLACK,
+            -2
+        )
+
         menu_label = self.xlg_font.render('MATH HURDLER', 1, Color.BLACK)
         gameover_label = self.xlg_font.render('GAME OVER', 1, Color.BLACK)
 
@@ -250,7 +261,7 @@ class MathHurdler:
                         pygame.quit()
                         return
                     elif event.type == pygame.VIDEORESIZE:
-                        pygame.display.set_mode(event.size, pygame.RESIZABLE)
+                        pygame.display.set_mode(event.size, pygame.FULLSCREEN)
                     elif event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_p:
                             self.paused = not self.paused
@@ -390,70 +401,82 @@ class MathHurdler:
                     reset()
                     self.set_playing(True)
 
+                def quit_game():
+                    self.running = False
+                    pygame.quit()
+
                 #in the menu
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         return
                     elif event.type == pygame.VIDEORESIZE:
-                        pygame.display.set_mode(event.size, pygame.RESIZABLE)
+                        pygame.display.set_mode(event.size, pygame.FULLSCREEN)
                     elif event.type == pygame.MOUSEBUTTONDOWN:
                         play_button.mouse_click(
                             pygame.mouse.get_pos(),
                             start_game
                         )
+                        quit_button.mouse_click(
+                            pygame.mouse.get_pos(),
+                            quit_game
+                        )
 
-                screen_size = screen.get_size()
+                if self.running:
+                    screen_size = screen.get_size()
 
-                if (self.horse_change == self.horse_change_semaphore):
-                    horse.gallop()
-                    self.horse_change = 0
+                    if (self.horse_change == self.horse_change_semaphore):
+                        horse.gallop()
+                        self.horse_change = 0
 
-                self.horse_change += 1
+                    self.horse_change += 1
 
-                #draw rainbow background fill
-                screen.fill(
-                    (
-                        math.floor(math.sin(pygame.time.get_ticks()*.001)*55 + 200),
-                        math.floor(math.sin(pygame.time.get_ticks()*.001+math.pi)*55 + 200),
-                        math.floor(math.sin(pygame.time.get_ticks()*.001+math.pi*.5)*55 + 200)
+                    #draw rainbow background fill
+                    screen.fill(
+                        (
+                            math.floor(math.sin(pygame.time.get_ticks()*.001)*55 + 200),
+                            math.floor(math.sin(pygame.time.get_ticks()*.001+math.pi)*55 + 200),
+                            math.floor(math.sin(pygame.time.get_ticks()*.001+math.pi*.5)*55 + 200)
+                        )
                     )
-                )
 
-                #draw menu horse
-                horse.rect.x = (screen_size[0] - horse.image.get_width()) / 2
-                horse.rect.y = (screen_size[1] - horse.image.get_height()) / 2 + 200
+                    #draw menu horse
+                    horse.rect.x = (screen_size[0] - horse.image.get_width()) / 2
+                    horse.rect.y = (screen_size[1] - horse.image.get_height()) / 2 + 220
 
-                menu_sprites = pygame.sprite.RenderPlain(horse)
-                menu_sprites.draw(screen)
+                    menu_sprites = pygame.sprite.RenderPlain(horse)
+                    menu_sprites.draw(screen)
 
-                #draw play button
-                play_button.rect.x = (screen_size[0] - play_button.rect.width) / 2
-                play_button.rect.y = (screen_size[1] - play_button.rect.height) / 2
-                play_button.draw(screen)
+                    #draw quit button
+                    quit_button.rect.x = (screen_size[0] - quit_button.rect.width) / 2
+                    quit_button.rect.y = (screen_size[1] - quit_button.rect.height) / 2 + 35
+                    quit_button.draw(screen)
 
-                #draw menu label
-                screen.blit(
-                    menu_label,
-                    (
-                        (screen_size[0] - menu_label.get_width()) / 2,
-                        (screen_size[1] - menu_label.get_height()) / 2 - 200,
-                    )
-                )
-                
-                
-                
-                pygame.display.flip()
-                
-                # Try to stay at 30 FPS
-                self.clock.tick(30)
+                    #draw play button
+                    play_button.rect.x = (screen_size[0] - play_button.rect.width) / 2
+                    play_button.rect.y = (screen_size[1] - play_button.rect.height) / 2 - 85
+                    play_button.draw(screen)
+
+                    #draw menu label
+                    screen.blit(
+                        menu_label,
+                        (
+                            (screen_size[0] - menu_label.get_width()) / 2,
+                            (screen_size[1] - menu_label.get_height()) / 2 - 220,
+                        )
+                    )  
+                    
+                    pygame.display.flip()
+                    
+                    # Try to stay at 30 FPS
+                    self.clock.tick(30)
 
 
 # This function is called when the game is run directly from the command line:
 # ./TestGame.py
 def main():
     pygame.init()
-    pygame.display.set_mode((0, 0), pygame.RESIZABLE)
+    pygame.display.set_mode((0, 0), pygame.FULLSCREEN)
     game = MathHurdler()
     game.run()
 
